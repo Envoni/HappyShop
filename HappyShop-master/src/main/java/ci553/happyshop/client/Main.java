@@ -1,20 +1,34 @@
 package ci553.happyshop.client;
 
-import ci553.happyshop.client.customer.*;
-
+import ci553.happyshop.authentication.UserAccount;
+import ci553.happyshop.authentication.UserRole;
+import ci553.happyshop.client.customer.CustomerController;
+import ci553.happyshop.client.customer.CustomerModel;
+import ci553.happyshop.client.customer.CustomerView;
 import ci553.happyshop.client.emergency.EmergencyExit;
 import ci553.happyshop.client.orderTracker.OrderTracker;
 import ci553.happyshop.client.picker.PickerController;
 import ci553.happyshop.client.picker.PickerModel;
 import ci553.happyshop.client.picker.PickerView;
-
-import ci553.happyshop.client.warehouse.*;
+import ci553.happyshop.client.warehouse.AlertSimulator;
+import ci553.happyshop.client.warehouse.HistoryWindow;
+import ci553.happyshop.client.warehouse.WarehouseController;
+import ci553.happyshop.client.warehouse.WarehouseModel;
+import ci553.happyshop.client.warehouse.WarehouseView;
 import ci553.happyshop.orderManagement.OrderHub;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.storageAccess.DatabaseRWFactory;
+import ci553.happyshop.ui.LoginView;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.io.IOException;
+
 
 /**
  * The Main JavaFX application class. The Main class is executable directly.
@@ -41,19 +55,75 @@ public class Main extends Application {
 
     //starts the system
     @Override
-    public void start(Stage window) throws IOException {
-        startCustomerClient();
-        startPickerClient();
-        startOrderTracker();
-
-        // Initializes the order map for the OrderHub. This must be called after starting the observer clients
-        // (such as OrderTracker and Picker clients) to ensure they are properly registered for receiving updates.
+    public void start(Stage primaryStage) {
         initializeOrderMap();
-
-        startWarehouseClient();
-
-        startEmergencyExit();
+        showLogin(primaryStage);
     }
+
+    private void showLogin(Stage primaryStage) {
+        LoginView loginView = new LoginView();
+        loginView.start(primaryStage, user -> showLauncher(primaryStage, user));
+    }
+
+    private void showLauncher(Stage primaryStage, UserAccount user) {
+
+        Label title = new Label("HappyShop Launcher");
+        Label roleLabel = new Label("Role: " + user.getRole());
+
+        Button customerButton = new Button("Open Customer Client");
+        customerButton.setOnAction(e -> startCustomerClient());
+
+        Button trackerButton = new Button("Open Order Tracker");
+        trackerButton.setOnAction(e -> startOrderTracker());
+
+        Button pickerButton = new Button("Open Picker Client");
+        pickerButton.setOnAction(e -> startPickerClient());
+
+        Button warehouseButton = new Button("Open Warehouse Client");
+        warehouseButton.setOnAction(e -> startWarehouseClient());
+
+        Button emergencyExitButton = new Button("Open Emergency Exit");
+        emergencyExitButton.setOnAction(e -> startEmergencyExit());
+
+        Button backButton = new Button("Back to Login");
+        backButton.setOnAction(e -> showLogin(primaryStage));
+
+        Button btnExit = new Button("Exit");
+        btnExit.setOnAction(e -> {
+            Platform.exit();
+            System.exit(0);
+        });
+
+        VBox root = new VBox(10);
+        root.setPadding(new Insets(20));
+        root.setAlignment(Pos.CENTER);
+
+        root.getChildren().addAll(title, roleLabel);
+
+        // CUSTOMER: Customer + Tracker
+        if (user.getRole() == UserRole.CUSTOMER) {
+            root.getChildren().addAll(customerButton, trackerButton);
+        }
+
+        // STAFF: Picker + Warehouse + Tracker
+        if (user.getRole() == UserRole.STAFF) {
+            root.getChildren().addAll(warehouseButton, pickerButton, trackerButton);
+        }
+
+        // ADMIN: everything
+        if (user.getRole() == UserRole.ADMIN) {
+            root.getChildren().addAll(customerButton, warehouseButton, pickerButton, trackerButton, emergencyExitButton);
+        }
+
+        root.getChildren().addAll(backButton, btnExit);
+
+        Scene scene = new Scene(root, 360, 420);
+        primaryStage.setTitle("HappyShop Launcher");
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
+
 
     /** The customer GUI -search prodduct, add to trolley, cancel/submit trolley, view receipt
      *
