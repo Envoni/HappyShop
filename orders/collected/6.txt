@@ -1,8 +1,8 @@
 Order ID: 6 
-State: Ordered 
+State: Collected
 OrderedDateTime: 2026-01-09 18:23:02 
-ProgressingDateTime:  
-CollectedDateTime: 
+ProgressingDateTime: 2026-01-09 21:29:37
+CollectedDateTime: 2026-01-09 21:29:37
 Items:
  0002    DAB Radio          ( 1) £  29.99
 --------------------------------------------

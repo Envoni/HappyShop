@@ -92,12 +92,32 @@ public class OrderHub  {
         return theOrder;
     }
 
+    private TreeMap<Integer,OrderState> snapshotOrderMap() {
+        return new TreeMap<>(orderMap);
+    }
+    private TreeMap<Integer,OrderState> buildPickerOrderMap(TreeMap<Integer,OrderState> source) {
+        TreeMap<Integer,OrderState> pickerMap = new TreeMap<>();
+        for (Map.Entry<Integer, OrderState> entry : source.entrySet()) {
+            OrderState state = entry.getValue();
+            if (state == OrderState.Ordered  || state == OrderState.Progressing){
+                pickerMap.put(entry.getKey(), state);
+            }
+        }
+        return pickerMap;
+    }
+
     //Registers an OrderTracker to receive updates about changes.
     public void registerOrderTracker(OrderTracker orderTracker){
-        orderTrackerList.add(orderTracker);
+        if (orderTracker == null) return;
+        if (!orderTrackerList.contains(orderTracker)){
+            orderTrackerList.add(orderTracker);
+        }
+        //pushes current state
+        orderTracker.setOrderMap(snapshotOrderMap());
     }
      //Notifies all registered observer_OrderTrackers to update and display the latest orderMap.
     public void notifyOrderTrackers(){
+        TreeMap<Integer,OrderState> orderMap = snapshotOrderMap();
         for(OrderTracker orderTracker : orderTrackerList){
             orderTracker.setOrderMap(orderMap);
         }
@@ -105,18 +125,20 @@ public class OrderHub  {
 
     //Registers a PickerModel to receive updates about changes.
     public void registerPickerModel(PickerModel pickerModel){
-        pickerModelList.add(pickerModel);
+        if (pickerModel ==  null) return;
+        if (!pickerModelList.contains(pickerModel)){
+            pickerModelList.add(pickerModel);
+        }
+        TreeMap<Integer, OrderState> snap = snapshotOrderMap();
+        pickerModel.setOrderMap(buildPickerOrderMap(snap));
     }
 
     //notify all pickers to show orderMap (only ordered and progressing states orders)
     public void notifyPickerModels(){
-        TreeMap<Integer,OrderState> orderMapForPicker = new TreeMap<>();
-        progressingOrderMap = filterOrdersByState(OrderState.Progressing);
-        OrderedOrderMap = filterOrdersByState(OrderState.Ordered);
-        orderMapForPicker.putAll(progressingOrderMap);
-        orderMapForPicker.putAll(OrderedOrderMap);
+        TreeMap<Integer, OrderState> snap = snapshotOrderMap();
+        TreeMap<Integer, OrderState> pickerSnap = buildPickerOrderMap(snap);
         for(PickerModel pickerModel : pickerModelList){
-            pickerModel.setOrderMap(orderMapForPicker);
+            pickerModel.setOrderMap(pickerSnap);
         }
     }
 

@@ -159,6 +159,7 @@ public class Main extends Application {
      *
      * Also registers the PickerModel with the OrderHub to receive order notifications.
      */
+    //changed order
     private void startPickerClient(){
         PickerModel pickerModel = new PickerModel();
         PickerView pickerView = new PickerView();
@@ -166,8 +167,8 @@ public class Main extends Application {
         pickerView.pickerController = pickerController;
         pickerController.pickerModel = pickerModel;
         pickerModel.pickerView = pickerView;
+        pickerView.start(new Stage()); // UI is built first so labels can exist
         pickerModel.registerWithOrderHub();
-        pickerView.start(new Stage());
     }
 
     //The OrderTracker GUI - for customer to track their order's state(Ordered, Progressing, Collected)
