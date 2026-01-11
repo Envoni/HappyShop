@@ -1,8 +1,8 @@
 Order ID: 11 
-State: Ordered 
+State: Collected
 OrderedDateTime: 2026-01-11 13:27:48 
-ProgressingDateTime:  
-CollectedDateTime: 
+ProgressingDateTime: 2026-01-11 18:45:58
+CollectedDateTime: 2026-01-11 18:45:58
 Items:
  0001    40 inch TV         ( 1) £ 269.00
 --------------------------------------------

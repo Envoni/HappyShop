@@ -30,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import java.util.ArrayList;
+import ci553.happyshop.authentication.AuthSession;
 
 
 
@@ -146,6 +147,11 @@ public class Main extends Application {
         cusModel.databaseRW = databaseRW;
         cusView.start(new Stage());
 
+        if (ci553.happyshop.authentication.AuthSession.get() != null) return;
+        cusModel.setCustomerUsername(AuthSession.get().getUsername());
+
+
+
         //RemoveProductNotifier removeProductNotifier = new RemoveProductNotifier();
         //removeProductNotifier.cusView = cusView;
         //cusModel.removeProductNotifier = removeProductNotifier;
@@ -174,10 +180,21 @@ public class Main extends Application {
     //The OrderTracker GUI - for customer to track their order's state(Ordered, Progressing, Collected)
     //This client is simple and does not follow the MVC pattern, as it only registers with the OrderHub
     //to receive order status notifications. All logic is handled internally within the OrderTracker.
-    private void startOrderTracker(){
-        OrderTracker orderTracker = new OrderTracker();
-        orderTracker.registerWithOrderHub();
+    private void startOrderTracker() {
+
+        // admin tracker, all orders
+        if (AuthSession.get() != null && AuthSession.get().getRole() != UserRole.CUSTOMER) {
+            OrderTracker tracker = new OrderTracker();      // no filter
+            tracker.registerWithOrderHub();
+            return;
+        }
+
+        // customer tracker, my orders only
+        String username = (AuthSession.get() == null) ? null : AuthSession.get().getUsername();
+        OrderTracker tracker = new OrderTracker(username);
+        tracker.registerWithOrderHub();
     }
+
 
     //initialize the orderMap<orderId, orderState> for OrderHub during system startup
     private void initializeOrderMap(){

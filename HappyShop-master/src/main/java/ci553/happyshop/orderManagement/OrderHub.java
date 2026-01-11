@@ -50,6 +50,8 @@ public class OrderHub  {
     private TreeMap<Integer,OrderState> orderMap = new TreeMap<>();
     private TreeMap<Integer,OrderState> OrderedOrderMap = new TreeMap<>();
     private TreeMap<Integer,OrderState> progressingOrderMap = new TreeMap<>();
+    private final TreeMap<Integer, String> orderOwnerMap = new TreeMap<>();
+
 
     /**
      * Two Lists to hold all registered OrderTracker and PickerModel observers.
@@ -74,22 +76,37 @@ public class OrderHub  {
 
     //Creates a new order using the provided list of products.
     //and also notify picker and orderTracker
-    public Order newOrder(ArrayList<Product> trolley) throws IOException, SQLException {
+    public Order newOrder(String customerUsername, ArrayList<Product> trolley) throws IOException, SQLException  {
         int orderId = OrderCounter.generateOrderId(); //get unique orderId
         String orderedDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         //make an Order Object: id, Ordered_state, orderedDateTime, and productsList(trolley)
         Order theOrder = new Order(orderId,OrderState.Ordered,orderedDateTime,trolley);
 
         //write order details to file for the orderId in orderedPath (ie. orders/ordered)
-        String orderDetail = theOrder.orderDetails();
+        String orderDetail = "Customer: " + customerUsername + "\n" +theOrder.orderDetails();
         Path path = orderedPath;
-        OrderFileManager.createOrderFile(path, orderId, orderDetail);
-
-        orderMap.put(orderId, theOrder.getState()); //add the order to orderMap,state is Ordered initially
+        OrderFileManager.createOrderFile(orderedPath, orderId, orderDetail);
+        orderOwnerMap.put(orderId, customerUsername);
+        if (customerUsername != null && !customerUsername.isEmpty()) {
+            orderMap.put(orderId, theOrder.getState()); //add the order to orderMap,state is Ordered initially
+        }
         notifyOrderTrackers(); //notify OrderTrackers
         notifyPickerModels();//notify pickers
         
         return theOrder;
+    }
+
+    private String readOwner(Path dir, int orderId){
+        try {
+            String text = OrderFileManager.readOrderFile(dir, orderId);
+            for (String line : text.split("\n")) {
+                line = line.trim();
+                if (line.startsWith("Customer:")) {
+                    return line.substring("Customer:".length()).trim();
+                }
+            }
+        } catch (Exception e){}
+        return null;
     }
 
     private TreeMap<Integer,OrderState> snapshotOrderMap() {
@@ -106,20 +123,36 @@ public class OrderHub  {
         return pickerMap;
     }
 
+    private void pushOrdersToTracker(OrderTracker tracker) {
+        String u = tracker.getFilterUsername();
+        if (u == null || u.isEmpty()) {
+            tracker.setOrderMap(snapshotOrderMap());
+        } else {
+            tracker.setOrderMap(getOrdersForCustomer(u));
+        }
+    }
+
     //Registers an OrderTracker to receive updates about changes.
     public void registerOrderTracker(OrderTracker orderTracker){
         if (orderTracker == null) return;
-        if (!orderTrackerList.contains(orderTracker)){
+        if (!orderTrackerList.contains(orderTracker)) {
             orderTrackerList.add(orderTracker);
         }
-        //pushes current state
-        orderTracker.setOrderMap(snapshotOrderMap());
+        pushOrdersToTracker(orderTracker);
     }
-     //Notifies all registered observer_OrderTrackers to update and display the latest orderMap.
+
+    //Notifies all registered observer_OrderTrackers to update and display the latest orderMap.
     public void notifyOrderTrackers(){
-        TreeMap<Integer,OrderState> orderMap = snapshotOrderMap();
-        for(OrderTracker orderTracker : orderTrackerList){
-            orderTracker.setOrderMap(orderMap);
+        TreeMap<Integer,OrderState> snap = snapshotOrderMap();
+        for (OrderTracker orderTracker : orderTrackerList) {
+            String u = orderTracker.getFilterUsername();
+            if (u == null || u.isEmpty()) {
+                orderTracker.setOrderMap(snap);
+                pushOrdersToTracker(orderTracker);
+            } else {
+                orderTracker.setOrderMap(getOrdersForCustomer(u));
+                pushOrdersToTracker(orderTracker);
+            }
         }
     }
 
@@ -214,11 +247,19 @@ public class OrderHub  {
         if(orderedIds.size()>0){
             for(Integer orderId : orderedIds){
                 orderMap.put(orderId, OrderState.Ordered);
+                String owner = readOwner(orderedPath,orderId);
+                if (owner != null && !owner.isEmpty()){
+                    orderOwnerMap.put(orderId, owner);
+                }
             }
         }
         if(progressingIds.size()>0){
             for(Integer orderId : progressingIds){
                 orderMap.put(orderId, OrderState.Progressing);
+                String owner = readOwner(progressingPath,orderId);
+                if (owner != null && !owner.isEmpty()){
+                    orderOwnerMap.put(orderId, owner);
+                }
             }
         }
         notifyOrderTrackers();
@@ -261,5 +302,20 @@ public class OrderHub  {
         }
         return orderIds;
     }
+
+    public TreeMap<Integer, OrderState> getOrdersForCustomer(String username) {
+        TreeMap<Integer, OrderState> out = new TreeMap<>();
+
+        if (username == null) return out;
+
+        for (Map.Entry<Integer, OrderState> e : orderMap.entrySet()) {
+            String owner = orderOwnerMap.get(e.getKey());
+            if (username.equals(owner)) {
+                out.put(e.getKey(), e.getValue());
+            }
+        }
+        return out;
+    }
+
 
 }

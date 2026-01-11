@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import java.util.Map;
 import java.util.TreeMap;
 
+
+
 /**
  * OrderTracker class is for tracking orders and their states.
  * It displays an ordersMap(a list of orders with their associated states) in a TextArea.
@@ -24,12 +26,23 @@ public class OrderTracker {
     private final int WIDTH = UIStyle.trackerWinWidth;
     private final int HEIGHT = UIStyle.trackerWinHeight;
 
+    private final String filterUsername;
+
     // TreeMap (orderID,state) holding order IDs and their corresponding states.
-    private static final TreeMap<Integer, OrderState> ordersMap = new TreeMap<>();
+    private final TreeMap<Integer, OrderState> ordersMap = new TreeMap<>();
     private final TextArea taDisplay; //area to show all orderId and their state on the GUI
 
-     //Constructor initializes the UI, a title Label, and a TextArea for displaying the order details.
+    public String getFilterUsername() {
+        return filterUsername;
+    }
+
     public OrderTracker() {
+        this(null);
+    }
+
+    //Constructor initializes the UI, a title Label, and a TextArea for displaying the order details.
+    public OrderTracker(String filterUsername) {
+        this.filterUsername = filterUsername;
         Label laTitle = new Label("Order_ID,  State");
         laTitle.setStyle(UIStyle.labelTitleStyle);
 
@@ -37,18 +50,21 @@ public class OrderTracker {
         taDisplay.setEditable(false);
         taDisplay.setStyle(UIStyle.textFiledStyle);
 
-        VBox vbox = new VBox(10,laTitle, taDisplay);
+        VBox vbox = new VBox(10, laTitle, taDisplay);
         vbox.setAlignment(Pos.TOP_CENTER);
-        vbox.setStyle(UIStyle. rootStyleGray);
+        vbox.setStyle(UIStyle.rootStyleGray);
 
         Scene scene = new Scene(vbox, WIDTH, HEIGHT);
         Stage window = new Stage();
         window.setScene(scene);
-        window.setTitle("🛒Order Tracker");
+        window.setTitle(filterUsername == null ? "🛒Order Tracker" : "🛒 My Order Tracker");
 
         // Registers the window's position with WinPosManager.
-        WinPosManager.registerWindow(window,WIDTH,HEIGHT); //calculate position x and y for this window
+        WinPosManager.registerWindow(window, WIDTH, HEIGHT); //calculate position x and y for this window
         window.show();
+
+        // displays current map content straight away
+        displayOrderMap();
     }
 
     /**
@@ -82,5 +98,4 @@ public class OrderTracker {
         String textDisplay = sb.toString();
         taDisplay.setText(textDisplay);
     }
-
 }

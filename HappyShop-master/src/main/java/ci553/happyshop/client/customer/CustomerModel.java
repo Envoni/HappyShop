@@ -1,5 +1,7 @@
 package ci553.happyshop.client.customer;
 
+import ci553.happyshop.authentication.AuthSession;
+import ci553.happyshop.authentication.UserAccount;
 import ci553.happyshop.catalogue.Order;
 import ci553.happyshop.catalogue.Product;
 import ci553.happyshop.storageAccess.DatabaseRW;
@@ -33,6 +35,13 @@ public class CustomerModel {
     private String displayLaSearchResult = "No Product was searched yet"; // Label showing search result message (Search Page)
     private String displayTaTrolley = "";                                // Text area content showing current trolley items (Trolley Page)
     private String displayTaReceipt = "";                                // Text area content showing receipt after checkout (Receipt Page)
+
+    private String customerUsername;
+
+    public void setCustomerUsername(String customerUsername) {
+        this.customerUsername = customerUsername;
+    }
+
 
     //SELECT productID, description, image, unitPrice,inStock quantity
     void search() throws SQLException {
@@ -83,6 +92,13 @@ public class CustomerModel {
 
     void checkOut() throws IOException, SQLException {
         if(!trolley.isEmpty()){
+            UserAccount account = AuthSession.get();
+            if (account == null) {
+                displayLaSearchResult = "You must be logged in to checkout";
+                updateView();
+                return;
+            }
+            String username = account.getUsername();
             // Group the products in the trolley by productId to optimize stock checking
             // Check the database for sufficient stock for all products in the trolley.
             // If any products are insufficient, the update will be rolled back.
@@ -93,8 +109,9 @@ public class CustomerModel {
 
             if(insufficientProducts.isEmpty()){ // If stock is sufficient for all products
                 //get OrderHub and tell it to make a new Order
-                OrderHub orderHub =OrderHub.getOrderHub();
-                Order theOrder = orderHub.newOrder(trolley);
+                OrderHub orderHub = OrderHub.getOrderHub();
+                Order theOrder = orderHub.newOrder(username, new ArrayList<>(trolley));
+
                 trolley.clear();
                 displayTaTrolley ="";
                 displayTaReceipt = String.format(

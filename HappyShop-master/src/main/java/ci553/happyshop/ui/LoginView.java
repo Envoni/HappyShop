@@ -105,6 +105,7 @@ public class LoginView {
         }
         text.setText("");
         passField.clear();
+        AuthSession.set(account);
         onSuccess.accept(account);
     }
 }
