@@ -1,0 +1,10 @@
+Order ID: 10 
+State: Collected
+OrderedDateTime: 2026-01-10 23:01:06 
+ProgressingDateTime: 2026-01-10 23:01:28
+CollectedDateTime: 2026-01-10 23:01:49
+Items:
+ 0005    Digital Camera     ( 1) £  89.99
+--------------------------------------------
+ Total                               £  89.99
+

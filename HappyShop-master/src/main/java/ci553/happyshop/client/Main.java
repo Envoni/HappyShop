@@ -28,6 +28,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import java.util.ArrayList;
+
 
 
 /**
@@ -86,7 +89,7 @@ public class Main extends Application {
         emergencyExitButton.setOnAction(e -> startEmergencyExit());
 
         Button backButton = new Button("Back to Login");
-        backButton.setOnAction(e -> showLogin(primaryStage));
+        backButton.setOnAction(e -> logout(primaryStage));
 
         Button btnExit = new Button("Exit");
         btnExit.setOnAction(e -> {
@@ -100,17 +103,14 @@ public class Main extends Application {
 
         root.getChildren().addAll(title, roleLabel);
 
-        // CUSTOMER: Customer + Tracker
         if (user.getRole() == UserRole.CUSTOMER) {
             root.getChildren().addAll(customerButton, trackerButton);
         }
 
-        // STAFF: Picker + Warehouse + Tracker
         if (user.getRole() == UserRole.STAFF) {
             root.getChildren().addAll(warehouseButton, pickerButton, trackerButton);
         }
 
-        // ADMIN: everything
         if (user.getRole() == UserRole.ADMIN) {
             root.getChildren().addAll(customerButton, warehouseButton, pickerButton, trackerButton, emergencyExitButton);
         }
@@ -216,6 +216,17 @@ public class Main extends Application {
         model.alertSimulator = alertSimulator;
         historyWindow.warehouseView = view;
         alertSimulator.warehouseView = view;
+    }
+
+    //clears session and windows then returns to login
+    private void logout(Stage primaryStage){
+        ci553.happyshop.authentication.AuthSession.clear();
+        for (Window w: new ArrayList<>(Window.getWindows())) {
+            if (w instanceof Stage s && s != primaryStage) {
+                s.close();
+            }
+        }
+        showLogin(primaryStage);
     }
 
     //starts the EmergencyExit GUI, - used to close the entire application immediatelly

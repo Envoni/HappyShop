@@ -6,11 +6,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.util.function.Consumer;
+import ci553.happyshop.authentication.AuthSession;
+
 
 public class LoginView {
     private TextField userField;
@@ -36,7 +37,7 @@ public class LoginView {
         VBox root = new VBox(10, title, userField, passField, loginButton, createButton, text);
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(root, 380, 280);
+        Scene scene = new Scene(root, 400, 300);
         window.setTitle("HappyShop Login");
         window.setScene(scene);
         window.setResizable(false);
@@ -54,9 +55,9 @@ public class LoginView {
         Button createButton = new Button("Create");
         createButton.setOnAction(e -> {
             //writes log in to csv
-            String err = AuthService.registerCustomer(userField.getText().trim(), passField.getText().trim(), confirmPField.getText().trim());
-            if (err != null) {
-                text.setText(err);
+            String error = AuthService.registerCustomer(userField.getText().trim(), passField.getText().trim(), confirmPField.getText().trim());
+            if (error != null) {
+                text.setText(error);
                 return;
             }
             //logs user straight in after account creation
@@ -66,6 +67,7 @@ public class LoginView {
                 return;
             }
             Stage stage = (Stage) createButton.getScene().getWindow();
+            AuthSession.set(account);
             stage.close();
             onSuccess.accept(account);
         });

@@ -10,4 +10,11 @@ public final class AuthSession {
     public static void clear() {currentUser = null;}
     public static boolean isLoggedIn() {return currentUser != null;}
 
+    public static String username() {
+        return currentUser.getUsername();
+    }
+
+    public static UserRole role() {
+        return currentUser.getRole();
+    }
 }
