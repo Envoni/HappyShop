@@ -1,0 +1,122 @@
+/* ===== Base ===== */
+.root {
+  -fx-font-family: "Segoe UI", Arial;
+  -fx-font-size: 13px;
+  -fx-background-color: linear-gradient(to bottom right, #ECFEFF, #FDF4FF);
+}
+.label {
+  -fx-text-fill: #3B0764; /* deep purple */
+}
+.text-field, .password-field, .text-area, .combo-box-base {
+  -fx-background-color: rgba(255, 255, 255, 0.95);
+  -fx-control-inner-background: rgba(255, 255, 255, 0.95);
+  -fx-border-color: rgba(91, 33, 182, 0.25);
+  -fx-border-radius: 12;
+  -fx-background-radius: 12;
+  -fx-padding: 8 10;
+  -fx-text-fill: #3B0764;
+  -fx-prompt-text-fill: rgba(59, 7, 100, 0.55);
+}
+.button {
+  -fx-background-radius: 12;
+  -fx-padding: 10 14;
+  -fx-font-weight: 800;
+  -fx-cursor: hand;
+  -fx-background-color: #A855F7; /* purple */
+  -fx-text-fill: white;
+}
+.button:hover {
+  -fx-background-color: #9333EA;
+}
+.list-view {
+  -fx-background-color: rgba(255, 255, 255, 0.85);
+  -fx-border-color: rgba(91, 33, 182, 0.18);
+  -fx-border-radius: 12;
+  -fx-background-radius: 12;
+}
+.list-cell {
+  -fx-background-color: transparent;
+  -fx-text-fill: #3B0764;
+}
+.list-cell:filled:selected {
+  -fx-background-color: rgba(168, 85, 247, 0.22);
+}
+
+/* ===== App-specific roots ===== */
+
+.launcher-root {
+  -fx-background-color: #FDE68A;
+}
+.launcher-title {
+  -fx-font-size: 18px;
+  -fx-font-weight: 900;
+  -fx-text-fill: #6D28D9;
+}
+.launcher-role {
+  -fx-font-size: 13px;
+  -fx-text-fill: #7C3AED;
+}
+.launcher-button {
+  -fx-background-color: #EC4899;
+  -fx-text-fill: white;
+  -fx-font-weight: 800;
+  -fx-background-radius: 10;
+  -fx-padding: 10 14;
+  -fx-min-width: 240px;
+}
+.launcher-button:hover {
+  -fx-background-color: #DB2777;
+}
+.launcher-exit {
+  -fx-background-color: rgba(109,40,217,0.15);
+  -fx-text-fill: #6D28D9;
+}
+.login-title {
+  -fx-font-size: 18px;
+  -fx-font-weight: 900;
+  -fx-text-fill: #3B0764;
+}
+.login-msg {
+  -fx-text-fill: #7E22CE;
+  -fx-font-weight: 800;
+}
+.customer-root {
+  -fx-padding: 8px;
+  -fx-background-color: linear-gradient(to bottom right, #ECFEFF, #FDF4FF);
+}
+.picker-map-root {
+  -fx-padding: 10px;
+  -fx-background-color: linear-gradient(to bottom right, #ECFEFF, #FDF4FF);
+}
+.picker-detail-root {
+  -fx-padding: 10px;
+  -fx-background-color: linear-gradient(to bottom right, #ECFEFF, #FDF4FF);
+}
+.tracker-root {
+  -fx-padding: 10px;
+  -fx-background-color: linear-gradient(to bottom right, #ECFEFF, #FDF4FF);
+}
+.tracker-title {
+  -fx-font-size: 16px;
+  -fx-font-weight: 900;
+  -fx-text-fill: #7E22CE;
+}
+.tracker-area {
+  -fx-font-size: 14px;
+}
+.warehouse-root {
+  -fx-padding: 8px;
+  -fx-background-color: linear-gradient(to bottom right, #ECFEFF, #FDF4FF);
+}
+.warehouse-search-page {
+  -fx-padding: 10px;
+  -fx-background-color: rgba(255, 255, 255, 0.25);
+}
+.warehouse-form-page {
+  -fx-padding: 10px;
+  -fx-background-color: rgba(255, 255, 255, 0.25);
+}
+.emergency-root {
+  -fx-padding: 10px;
+  -fx-background-color: linear-gradient(to bottom right, #ECFEFF, #FDF4FF);
+}

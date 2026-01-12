@@ -3,6 +3,7 @@ package ci553.happyshop.client.customer;
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -17,6 +18,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
+import ci553.happyshop.ui.AppTheme;
 
 /**
  * The CustomerView is separated into two sections by a line :
@@ -65,9 +68,10 @@ public class CustomerView  {
 
         hbRoot = new HBox(10, vbSearchPage, lineContainer, vbTrolleyPage); //initialize to show trolleyPage
         hbRoot.setAlignment(Pos.CENTER);
-        hbRoot.setStyle(UIStyle.rootStyle);
+        hbRoot.getStyleClass().add("customer-root");
 
         Scene scene = new Scene(hbRoot, WIDTH, HEIGHT);
+        AppTheme.register(scene);
         window.setScene(scene);
         window.setTitle("🛒 HappyShop Customer Client");
         WinPosManager.registerWindow(window,WIDTH,HEIGHT); //calculate position x and y for this window

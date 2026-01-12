@@ -1,0 +1,11 @@
+Customer: test
+Order ID: 14 
+State: Collected
+OrderedDateTime: 2026-01-11 22:19:50 
+ProgressingDateTime: 2026-01-11 22:21:08
+CollectedDateTime: 2026-01-11 22:21:08
+Items:
+ 0008    USB2 drive         ( 1) £   7.99
+--------------------------------------------
+ Total                               £   7.99
+

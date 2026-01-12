@@ -18,6 +18,7 @@ import ci553.happyshop.client.warehouse.WarehouseView;
 import ci553.happyshop.orderManagement.OrderHub;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.storageAccess.DatabaseRWFactory;
+import ci553.happyshop.ui.AppTheme;
 import ci553.happyshop.ui.LoginView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -31,6 +32,9 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import java.util.ArrayList;
 import ci553.happyshop.authentication.AuthSession;
+import ci553.happyshop.utility.UIStyle;
+import javafx.scene.control.ComboBox;
+
 
 
 
@@ -70,9 +74,28 @@ public class Main extends Application {
     }
 
     private void showLauncher(Stage primaryStage, UserAccount user) {
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.getItems().addAll("Light", "Dark", "Colourful");
+        comboBox.setValue("Light");
+
+        comboBox.setOnAction(e -> {
+            String v = comboBox.getValue();
+            if("Dark".equals(v)) {
+                    UIStyle.setTheme(UIStyle.Theme.DARK);
+            }else if("Colourful".equals(v)) {
+                UIStyle.setTheme(UIStyle.Theme.COLOURFUL);
+            }else {
+                UIStyle.setTheme(UIStyle.Theme.LIGHT);
+            }
+            AppTheme.refreshAll();
+            System.out.println("Theme: " + UIStyle.getTheme());
+            System.out.println("Stylesheets: " + primaryStage.getScene().getStylesheets());
+        });
 
         Label title = new Label("HappyShop Launcher");
+        title.getStyleClass().add("launcher-title");
         Label roleLabel = new Label("Role: " + user.getRole());
+        roleLabel.getStyleClass().add("launcher-role");
 
         Button customerButton = new Button("Open Customer Client");
         customerButton.setOnAction(e -> startCustomerClient());
@@ -93,16 +116,25 @@ public class Main extends Application {
         backButton.setOnAction(e -> logout(primaryStage));
 
         Button btnExit = new Button("Exit");
+        customerButton.getStyleClass().add("launcher-button");
+        trackerButton.getStyleClass().add("launcher-button");
+        pickerButton.getStyleClass().add("launcher-button");
+        warehouseButton.getStyleClass().add("launcher-button");
+        emergencyExitButton.getStyleClass().add("launcher-button");
+        backButton.getStyleClass().add("launcher-button");
+
+        btnExit.getStyleClass().addAll("launcher-button", "launcher-exit");
         btnExit.setOnAction(e -> {
             Platform.exit();
             System.exit(0);
         });
 
         VBox root = new VBox(10);
+        root.getStyleClass().add("launcher-root");
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
-        root.getChildren().addAll(title, roleLabel);
+        root.getChildren().addAll(title, roleLabel, comboBox);
 
         if (user.getRole() == UserRole.CUSTOMER) {
             root.getChildren().addAll(customerButton, trackerButton);
@@ -119,9 +151,13 @@ public class Main extends Application {
         root.getChildren().addAll(backButton, btnExit);
 
         Scene scene = new Scene(root, 360, 420);
+        AppTheme.register(scene);
         primaryStage.setTitle("HappyShop Launcher");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
+        System.out.println("LIGHT CSS URL = " + AppTheme.class.getResource("/css/app-light.css"));
+        System.out.println("DARK  CSS URL = " + AppTheme.class.getResource("/css/app-dark.css"));
+        System.out.println("COL   CSS URL = " + AppTheme.class.getResource("/css/app-colourful.css"));
         primaryStage.show();
     }
 

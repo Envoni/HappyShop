@@ -2,6 +2,7 @@ package ci553.happyshop.client.orderTracker;
 
 import ci553.happyshop.orderManagement.OrderHub;
 import ci553.happyshop.orderManagement.OrderState;
+import ci553.happyshop.ui.AppTheme;
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import javafx.geometry.Pos;
@@ -51,10 +52,14 @@ public class OrderTracker {
         taDisplay.setStyle(UIStyle.textFiledStyle);
 
         VBox vbox = new VBox(10, laTitle, taDisplay);
+        vbox.getStyleClass().add("tracker-root");
+        laTitle.getStyleClass().add("tracker-title");
+        taDisplay.getStyleClass().add("tracker-area");
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setStyle(UIStyle.rootStyleGray);
 
         Scene scene = new Scene(vbox, WIDTH, HEIGHT);
+        AppTheme.register(scene);
         Stage window = new Stage();
         window.setScene(scene);
         window.setTitle(filterUsername == null ? "🛒Order Tracker" : "🛒 My Order Tracker");

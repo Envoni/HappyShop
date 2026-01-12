@@ -35,9 +35,11 @@ public class LoginView {
         Button createButton = new Button("Create Customer Account");
         createButton.setOnAction(e -> showCreateAccountWindow(window, onSuccess));
         VBox root = new VBox(10, title, userField, passField, loginButton, createButton, text);
+        root.getStyleClass().add("login-root");
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 400, 300);
+        AppTheme.register(scene);
         window.setTitle("HappyShop Login");
         window.setScene(scene);
         window.setResizable(false);
@@ -77,9 +79,11 @@ public class LoginView {
             stage.close();
         });
         VBox root = new VBox(10, title, userField, passField, confirmPField, createButton, cancelButton, text);
+        root.getStyleClass().add("login-root"); // reuse same background rules
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 400, 300);
+        AppTheme.register(scene);
         Stage dialog = new Stage();
         dialog.initOwner(owner);
         dialog.initModality(Modality.WINDOW_MODAL);

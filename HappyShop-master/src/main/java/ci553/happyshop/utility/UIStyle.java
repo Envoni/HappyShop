@@ -55,6 +55,24 @@ public final class UIStyle {
     public static final int EmergencyExitWinWidth = 200;
     public static final int EmergencyExitWinHeight = 300;
 
+    public enum Theme {
+        LIGHT,
+        DARK,
+        COLOURFUL
+    }
+
+    private static Theme theme = Theme.LIGHT;
+
+    public static Theme getTheme() {
+        return theme;
+    }
+
+    public static void setTheme(Theme t) {
+        if (t == null) return;
+        theme = t;
+    }
+
+
     public static final String labelTitleStyle = "-fx-font-weight: bold; " +
             "-fx-font-size: 16px; -fx-text-fill: purple;";
 

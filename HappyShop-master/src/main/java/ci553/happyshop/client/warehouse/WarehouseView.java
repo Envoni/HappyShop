@@ -28,6 +28,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.scene.input.MouseEvent;
+
+import ci553.happyshop.ui.AppTheme;
+
 /**
  * Some emojis used in the UI. If the emoji does not work on your OS,
  * please change them to their unique Unicode codes.
@@ -144,9 +147,10 @@ public class WarehouseView  {
 
         //top level layout manager
         HBox hbRoot = new HBox(15, vbSearchPage, lineContainer, vbProductFormPage);
-        hbRoot.setStyle(UIStyle.rootStyleWarehouse);
+        hbRoot.getStyleClass().add("warehouse-root"); // not hard setting the theme inline
 
         Scene scene = new Scene(hbRoot, WIDTH, HEIGHT);
+        AppTheme.register(scene);
         window.setScene(scene);
         window.setTitle("Search_Page  🛒🛒HappyShop_Warehouse🛒🛒  ProductForm_Page(Edit & AddNew Product)");
         WinPosManager.registerWindow(window,WIDTH,HEIGHT); // Registers the window with WinPosManager to
