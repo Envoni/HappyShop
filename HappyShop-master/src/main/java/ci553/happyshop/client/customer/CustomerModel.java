@@ -45,36 +45,58 @@ public class CustomerModel {
 
     //SELECT productID, description, image, unitPrice,inStock quantity
     void search() throws SQLException {
+
         String productId = cusView.tfId.getText().trim();
-        if (productId.isEmpty()) {
-            theProduct = null;
-            displayLaSearchResult = "No Product was searched yet";
-            updateView();
-            return;
-        }
-        theProduct = databaseRW.searchByProductId(productId);
-        if (theProduct == null) {
-            displayLaSearchResult = "No Product was found with ID " + productId;
+        String productName = cusView.tfName.getText().trim();
+        if (!productId.isEmpty()) {
+            theProduct = databaseRW.searchByProductId(productId);
+
+            if (theProduct == null) {
+                displayLaSearchResult = "No Product was found with ID " + productId;
+                updateView();
+                return;
+            }
+            showSearchResultFor(theProduct);
             updateView();
             return;
         }
 
-        double unitPrice = theProduct.getUnitPrice();
-        String description = theProduct.getProductDescription();
-        int stock = theProduct.getStockQuantity();
-        String baseInfo = String.format("Product_Id: %s\n%s,\nPrice: £%.2f", productId, description, unitPrice);
+        if (!productName.isEmpty()) {
+            theProduct = databaseRW.searchByProductName(productName);
+
+            if (theProduct == null) {
+                displayLaSearchResult = "No Product was found with name: " + productName;
+                updateView();
+                return;
+            }
+            showSearchResultFor(theProduct);
+            updateView();
+            return;
+        }
+
+        theProduct = null;
+        displayLaSearchResult = "Please type a Product ID or a Name";
+        updateView();
+    }
+
+    private void showSearchResultFor(Product p) {
+        double unitPrice = p.getUnitPrice();
+        String description = p.getProductDescription();
+        int stock = p.getStockQuantity();
+        String id = p.getProductId();
+
+        String baseInfo = String.format(
+                "Product_Id: %s\n%s,\nPrice: £%.2f",
+                id, description, unitPrice
+        );
 
         if (stock <= 0) {
             displayLaSearchResult = baseInfo + "\nOut of stock";
-        }
-        else if (stock < 100) {
+        } else if (stock < 100) {
             displayLaSearchResult = baseInfo + String.format("\n%d units left.", stock);
-        }
-        else {
+        } else {
             displayLaSearchResult = baseInfo;
         }
-        updateView();
-
     }
 
     void addToTrolley(int qty){

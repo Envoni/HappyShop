@@ -69,6 +69,29 @@ public class DerbyRW implements DatabaseRW {
         return product;
     }
 
+    public Product searchByProductName(String name) throws SQLException {
+        if (name == null || name.isBlank()) return null;
+
+        String sql =
+                "SELECT * FROM ProductTable " +
+                        "WHERE LOWER(description) LIKE ?";
+
+        try (Connection conn = DriverManager.getConnection(dbURL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + name.trim().toLowerCase() + "%");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    // Reuse your existing, working mapper (same as ID search)
+                    return makeProObjFromDbRecord(rs);
+                }
+                return null;
+            }
+        }
+    }
+
+
     //helper method
     //search  by product name, return a List of products or null
     private ArrayList<Product> searchByProName(String name) {

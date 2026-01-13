@@ -44,6 +44,10 @@ public interface DatabaseRW {
      */
     Product searchByProductId(String productId) throws SQLException;
 
+    Product searchByProductName(String name) throws SQLException;
+
+
+
     /**
      * Attempts to purchase (reduce stocks of) the given list of products.
      * Behavior:
@@ -87,5 +91,7 @@ public interface DatabaseRW {
      */
     boolean isProIdAvailable(String productId) throws SQLException;
 }
+
+
 
 
