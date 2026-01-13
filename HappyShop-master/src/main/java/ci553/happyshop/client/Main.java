@@ -95,7 +95,7 @@ public class Main extends Application {
         Label title = new Label("HappyShop Launcher");
         title.getStyleClass().add("launcher-title");
         Label roleLabel = new Label("Role: " + user.getRole());
-        roleLabel.getStyleClass().add("launcher-role");
+        roleLabel.getStyleClass().add("launcher-subtitle");
 
         Button customerButton = new Button("Open Customer Client");
         customerButton.setOnAction(e -> startCustomerClient());
@@ -150,7 +150,7 @@ public class Main extends Application {
 
         root.getChildren().addAll(backButton, btnExit);
 
-        Scene scene = new Scene(root, 360, 420);
+        Scene scene = new Scene(root, 350, 500);
         AppTheme.register(scene);
         primaryStage.setTitle("HappyShop Launcher");
         primaryStage.setScene(scene);

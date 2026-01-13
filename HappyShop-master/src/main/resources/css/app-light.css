@@ -1,131 +1,138 @@
 /* ===== Base ===== */
 .root {
-  -fx-font-family: "Segoe UI", Arial;
-  -fx-font-size: 13px;
-  -fx-background-color: #F4F6FA;
+    -fx-font-family: "Segoe UI", Arial;
+    -fx-font-size: 13px;
+    -fx-background-color: #F4F6FA;
 }
 /* Common text */
 .label {
-  -fx-text-fill: #111827;
+    -fx-text-fill: #111827;
 }
 .text-field, .password-field, .text-area, .combo-box-base {
-  -fx-background-color: white;
-  -fx-border-color: rgba(17, 24, 39, 0.15);
-  -fx-border-radius: 10;
-  -fx-background-radius: 10;
-  -fx-padding: 8 10;
-  -fx-text-fill: #111827;
+    -fx-background-color: white;
+    -fx-border-color: rgba(17, 24, 39, 0.15);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 8 10;
+    -fx-text-fill: #111827;
 }
 .text-area {
-  -fx-control-inner-background: white;
+    -fx-control-inner-background: white;
 }
 .combo-box {
-  -fx-background-radius: 10;
-  -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
 }
 .button {
-  -fx-background-radius: 10;
-  -fx-padding: 10 14;
-  -fx-font-weight: 700;
-  -fx-cursor: hand;
+    -fx-background-radius: 10;
+    -fx-padding: 10 14;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
 }
 /* A sensible default "primary" button look */
 .button {
-  -fx-background-color: #6D28D9;
-  -fx-text-fill: white;
+    -fx-background-color: #6D28D9;
+    -fx-text-fill: white;
 }
 .button:hover {
-  -fx-background-color: #5B21B6;
+    -fx-background-color: #5B21B6;
 }
 .list-view {
-  -fx-background-color: white;
-  -fx-border-color: rgba(17, 24, 39, 0.15);
-  -fx-border-radius: 10;
-  -fx-background-radius: 10;
+    -fx-background-color: white;
+    -fx-border-color: rgba(17, 24, 39, 0.15);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
 }
 .list-cell {
-  -fx-background-color: transparent;
-  -fx-text-fill: #111827;
+    -fx-background-color: transparent;
+    -fx-text-fill: #111827;
 }
 .list-cell:filled:selected {
-  -fx-background-color: rgba(109, 40, 217, 0.18);
+    -fx-background-color: rgba(109, 40, 217, 0.18);
 }
 
 /* ===== App-specific roots ===== */
 
 .launcher-root {
-  -fx-background-color: #F4F6FA;
+      -fx-background-color: #F4F6FA;
 }
-.launcher-title {
-  -fx-font-size: 18px;
-  -fx-font-weight: 800;
-  -fx-text-fill: #1F2937;
+.label.launcher-title {
+      -fx-text-fill: #1F2937;
+}
+.label.launcher-subtitle {
+      -fx-text-fill: #374151;
 }
 .launcher-role {
-  -fx-font-size: 13px;
-  -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-text-fill: #374151;
 }
 .launcher-button {
-  -fx-background-color: #3B82F6;
-  -fx-text-fill: white;
-  -fx-font-weight: 700;
-  -fx-background-radius: 10;
-  -fx-padding: 10 14;
-  -fx-min-width: 240px;
+    -fx-background-color: #3B82F6;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-padding: 10 14;
+    -fx-min-width: 240px;
 }
 .launcher-button:hover {
-  -fx-background-color: #2563EB;
+    -fx-background-color: #2563EB;
 }
 .launcher-exit {
-  -fx-background-color: rgba(31,41,55,0.10);
-  -fx-text-fill: #111827;
+    -fx-background-color: rgba(31,41,55,0.10);
+    -fx-text-fill: #111827;
 }
 .login-title {
-  -fx-font-size: 18px;
-  -fx-font-weight: 800;
-  -fx-text-fill: #111827;
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #111827;
+}
+.login-root {
+    -fx-background-color: #F4F6FA
+}
+.label.login-title {
+    -fx-text-fill: #1F2937
 }
 .login-msg {
-  -fx-text-fill: #6D28D9; /* purple accent */
-  -fx-font-weight: 700;
+    -fx-text-fill: #6D28D9; /* purple accent */
+    -fx-font-weight: 700;
 }
 .customer-root {
-  -fx-padding: 8px;
-  -fx-background-color: #F4F6FA;
+    -fx-padding: 8px;
+    -fx-background-color: #F4F6FA;
 }
 .picker-map-root {
-  -fx-padding: 10px;
-  -fx-background-color: #F4F6FA;
+    -fx-padding: 10px;
+    -fx-background-color: #F4F6FA;
 }
 .picker-detail-root {
-  -fx-padding: 10px;
-  -fx-background-color: #F4F6FA;
+    -fx-padding: 10px;
+    -fx-background-color: #F4F6FA;
 }
 .tracker-root {
-  -fx-padding: 10px;
-  -fx-background-color: #F4F6FA;
+    -fx-padding: 10px;
+    -fx-background-color: #F4F6FA;
 }
 .tracker-title {
-  -fx-font-size: 16px;
-  -fx-font-weight: 800;
-  -fx-text-fill: #6D28D9;
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #6D28D9;
 }
 .tracker-area {
-  -fx-font-size: 14px;
+    -fx-font-size: 14px;
 }
 .warehouse-root {
-  -fx-padding: 8px;
-  -fx-background-color: #F4F6FA;
+    -fx-padding: 8px;
+    -fx-background-color: #F4F6FA;
 }
 .warehouse-search-page {
-  -fx-padding: 10px;
-  -fx-background-color: #F4F6FA;
+    -fx-padding: 10px;
+    -fx-background-color: #F4F6FA;
 }
 .warehouse-form-page {
-  -fx-padding: 10px;
-  -fx-background-color: #F4F6FA;
+    -fx-padding: 10px;
+    -fx-background-color: #F4F6FA;
 }
 .emergency-root {
-  -fx-padding: 10px;
-  -fx-background-color: #F4F6FA;
+    -fx-padding: 10px;
+    -fx-background-color: #F4F6FA;
 }

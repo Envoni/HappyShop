@@ -20,6 +20,7 @@ public class LoginView {
     public void start(Stage window, Consumer<UserAccount> onSuccess) {
 
         Label title = new Label("HappyShop Login");
+        title.getStyleClass().add("login-title");
         userField = new TextField();
         userField.setPromptText("Username");
         passField = new PasswordField();
