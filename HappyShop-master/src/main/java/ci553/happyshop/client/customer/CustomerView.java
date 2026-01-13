@@ -55,6 +55,7 @@ public class CustomerView  {
     private Stage viewWindow;
 
     private Spinner<Integer> spQty;
+    private SpinnerValueFactory.IntegerSpinnerValueFactory qtyFactory;
 
     public void start(Stage window) {
         VBox vbSearchPage = createSearchPage();
@@ -114,7 +115,9 @@ public class CustomerView  {
                 throw new RuntimeException(ex);
             }
         });
-        spQty = new Spinner<>(1, 99, 1);
+        qtyFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99, 1);
+        spQty = new Spinner<>();
+        spQty.setValueFactory(qtyFactory);
         spQty.setEditable(true);
         spQty.getStyleClass().add("qty-spinner");
         spQty.getEditor().getStyleClass().add("qty-editor");
@@ -256,4 +259,13 @@ public class CustomerView  {
     public int getSelectedQty() {
         return (spQty == null) ? 1 : spQty.getValue();
     }
+
+    public void setQtyMax(int maxStock) {
+        if (maxStock < 1) maxStock = 1;
+        qtyFactory.setMax(maxStock);
+        Integer current = spQty.getValue();
+        if (current == null || current < 1) current = 1;
+        if (current > maxStock) spQty.getValueFactory().setValue(maxStock);
+    }
+
 }
