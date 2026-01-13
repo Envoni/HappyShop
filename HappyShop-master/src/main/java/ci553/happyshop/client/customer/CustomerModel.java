@@ -71,15 +71,14 @@ public class CustomerModel {
         updateView();
     }
 
-    void addToTrolley(){
+    void addToTrolley(int qty){
         if(theProduct!= null){
+            if (qty < 1) qty = 1;
 
-            // trolley.add(theProduct) — Product is appended to the end of the trolley.
-            // To keep the trolley organized, add code here or call a method that:
-            //TODO
-            // 1. Merges items with the same product ID (combining their quantities).
-            // 2. Sorts the products in the trolley by product ID.
-            trolley.add(theProduct);
+            Product toAdd = copyForTrolley(theProduct, qty);
+            mergeIntoTrolley(toAdd);
+            sortTrolleyById();
+
             displayTaTrolley = ProductListFormatter.buildString(trolley); //build a String for trolley so that we can show it
         }
         else{
@@ -88,6 +87,35 @@ public class CustomerModel {
         }
         displayTaReceipt=""; // Clear receipt to switch back to trolleyPage (receipt shows only when not empty)
         updateView();
+    }
+
+    private Product copyForTrolley(Product p, int qty) {
+        Product copy = new Product(
+                p.getProductId(),
+                p.getProductDescription(),
+                p.getProductImageName(),
+                p.getUnitPrice(),
+                p.getStockQuantity()
+        );
+        copy.setOrderedQuantity(qty);
+        return copy;
+    }
+
+    private void mergeIntoTrolley(Product toAdd) {
+        String id = toAdd.getProductId();
+
+        for (Product existing : trolley) {
+            if (id.equals(existing.getProductId())) {
+                int newQty = existing.getOrderedQuantity() + toAdd.getOrderedQuantity();
+                existing.setOrderedQuantity(newQty);
+                return; // merged -> done
+            }
+        }
+        trolley.add(toAdd); // not found -> append
+    }
+
+    private void sortTrolleyById() {
+        trolley.sort((a, b) -> a.getProductId().compareToIgnoreCase(b.getProductId()));
     }
 
     void checkOut() throws IOException, SQLException {
@@ -192,7 +220,47 @@ public class CustomerModel {
         }
         cusView.update(imageName, displayLaSearchResult, displayTaTrolley,displayTaReceipt);
     }
-     // extra notes:
+
+    void removeFromTrolley() {
+        String productId = cusView.tfId.getText().trim();
+        int qty = 1;
+        try {
+            // uses your spinner value if available
+            qty = cusView.getSelectedQty();   // see small helper below
+        } catch (Exception ignored) {}
+
+        if (productId.isEmpty()) {
+            displayLaSearchResult = "Type a Product ID to remove from trolley";
+            updateView();
+            return;
+        }
+        if (qty < 1) qty = 1;
+        Product found = null;
+        for (Product p : trolley) {
+            if (productId.equals(p.getProductId())) {
+                found = p;
+                break;
+            }
+        }
+        if (found == null) {
+            displayLaSearchResult = "The product is not in your trolley: " + productId;
+            updateView();
+            return;
+        }
+
+        int newQty = found.getOrderedQuantity() - qty;
+        if (newQty <= 0) {
+            trolley.remove(found);
+        } else {
+            found.setOrderedQuantity(newQty);
+        }
+        sortTrolleyById();
+        displayTaTrolley = ProductListFormatter.buildString(trolley);
+        displayTaReceipt = "";
+        updateView();
+    }
+
+    // extra notes:
      //Path.toUri(): Converts a Path object (a file or a directory path) to a URI object.
      //File.toURI(): Converts a File object (a file on the filesystem) to a URI object
 

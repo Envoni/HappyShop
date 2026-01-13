@@ -136,3 +136,30 @@
     -fx-padding: 10px;
     -fx-background-color: #F4F6FA;
 }
+.customer-root .button {
+    -fx-padding: 10 14;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-min-width: 110px;
+}
+.customer-root .spinner {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.qty-spinner.spinner {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.qty-spinner.spinner > .text-field,
+.qty-spinner.spinner .text-field {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 6 8;
+    -fx-alignment: CENTER;
+    -fx-control-inner-background: white;
+    -fx-background-color: white;
+    -fx-text-fill: #111827;
+    -fx-highlight-fill: #C7D2FE;
+    -fx-highlight-text-fill: #111827;
+}
+

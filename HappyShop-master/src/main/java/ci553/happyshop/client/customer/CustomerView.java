@@ -1,5 +1,6 @@
 package ci553.happyshop.client.customer;
 
+
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
@@ -53,6 +54,8 @@ public class CustomerView  {
     // (e.g., positioning the removeProductNotifier when needed).
     private Stage viewWindow;
 
+    private Spinner<Integer> spQty;
+
     public void start(Stage window) {
         VBox vbSearchPage = createSearchPage();
         vbTrolleyPage = CreateTrolleyPage();
@@ -101,10 +104,36 @@ public class CustomerView  {
         Button btnSearch = new Button("Search");
         btnSearch.setStyle(UIStyle.buttonStyle);
         btnSearch.setOnAction(this::buttonClicked);
-        Button btnAddToTrolley = new Button("Add to Trolley");
+        Button btnAddToTrolley = new Button("Add");
         btnAddToTrolley.setStyle(UIStyle.buttonStyle);
-        btnAddToTrolley.setOnAction(this::buttonClicked);
-        HBox hbBtns = new HBox(10, laPlaceHolder,btnSearch, btnAddToTrolley);
+        btnAddToTrolley.setOnAction(e -> {
+            try {
+                int qty = spQty.getValue();
+                cusController.addSelectedProductToTrolley(qty);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        spQty = new Spinner<>(1, 99, 1);
+        spQty.setEditable(true);
+        spQty.getStyleClass().add("qty-spinner");
+        spQty.getEditor().getStyleClass().add("qty-editor");
+        spQty.getEditor().applyCss();
+
+        spQty.setMinWidth(90);
+        spQty.setPrefWidth(90);
+        spQty.setMaxWidth(90);
+
+        btnSearch.setMinWidth(0);
+        btnAddToTrolley.setMinWidth(0);
+        btnSearch.setMaxWidth(Double.MAX_VALUE);
+        btnAddToTrolley.setMaxWidth(Double.MAX_VALUE);
+
+        HBox.setHgrow(btnSearch, Priority.ALWAYS);
+        HBox.setHgrow(btnAddToTrolley, Priority.ALWAYS);
+
+        HBox hbBtns = new HBox(10, btnSearch, btnAddToTrolley, spQty);
+        hbBtns.setAlignment(Pos.CENTER_LEFT);
 
         ivProduct = new ImageView("imageHolder.jpg");
         ivProduct.setFitHeight(60);
@@ -143,7 +172,11 @@ public class CustomerView  {
         btnCheckout.setOnAction(this::buttonClicked);
         btnCheckout.setStyle(UIStyle.buttonStyle);
 
-        HBox hbBtns = new HBox(10, btnCancel,btnCheckout);
+        Button btnRemove = new Button("Remove");
+        btnRemove.setOnAction(this::buttonClicked);
+        btnRemove.setStyle(UIStyle.buttonStyle);
+
+        HBox hbBtns = new HBox(10, btnCancel,btnRemove, btnCheckout);
         hbBtns.setStyle("-fx-padding: 15px;");
         hbBtns.setAlignment(Pos.CENTER);
 
@@ -218,5 +251,9 @@ public class CustomerView  {
     WindowBounds getWindowBounds() {
         return new WindowBounds(viewWindow.getX(), viewWindow.getY(),
                   viewWindow.getWidth(), viewWindow.getHeight());
+    }
+
+    public int getSelectedQty() {
+        return (spQty == null) ? 1 : spQty.getValue();
     }
 }

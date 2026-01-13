@@ -3,6 +3,7 @@ package ci553.happyshop.client.customer;
 import java.io.IOException;
 import java.sql.SQLException;
 
+
 public class CustomerController {
     public CustomerModel cusModel;
 
@@ -12,7 +13,7 @@ public class CustomerController {
                 cusModel.search();
                 break;
             case "Add to Trolley":
-                cusModel.addToTrolley();
+                cusModel.addToTrolley(1);
                 break;
             case "Cancel":
                 cusModel.cancel();
@@ -20,10 +21,15 @@ public class CustomerController {
             case "Check Out":
                 cusModel.checkOut();
                 break;
+            case "Remove":
+                cusModel.removeFromTrolley();
             case "OK & Close":
                 cusModel.closeReceipt();
                 break;
         }
     }
 
+    public void addSelectedProductToTrolley(int qty) throws SQLException, IOException {
+        cusModel.addToTrolley(qty);
+    }
 }

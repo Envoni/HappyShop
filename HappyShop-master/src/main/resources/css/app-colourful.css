@@ -133,3 +133,40 @@
     -fx-padding: 10px;
     -fx-background-color: #065F46;
 }
+.customer-root .button {
+    -fx-padding: 10 14;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-min-width: 110px;
+}
+.customer-root .spinner {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.customer-root .button {
+    -fx-background-color: #22C55E;
+    -fx-text-fill: #06210F;
+}
+.customer-root .button:hover {
+    -fx-background-color: #16A34A;
+}
+.qty-spinner.spinner {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: rgba(34, 197, 94, 0.35);
+    -fx-background-color: rgba(6, 33, 15, 0.15);
+}
+.qty-spinner.spinner > .text-field,
+.qty-spinner.spinner .text-field {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 6 8;
+    -fx-alignment: CENTER;
+
+    -fx-control-inner-background: #ECFDF5; /* very light green */
+    -fx-background-color: #ECFDF5;
+    -fx-text-fill: #064E3B;
+
+    -fx-highlight-fill: rgba(34, 197, 94, 0.35);
+    -fx-highlight-text-fill: #064E3B;
+}

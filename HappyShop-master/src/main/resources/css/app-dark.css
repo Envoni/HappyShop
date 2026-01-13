@@ -139,3 +139,34 @@ label.login-title{
 .emergency-root {
     -fx-background-color: #f6d365;
 }
+.customer-root .button {
+    -fx-padding: 10 14;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-min-width: 110px;
+}
+.customer-root .spinner {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+.qty-spinner.spinner {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: rgba(229, 231, 235, 0.18);
+    -fx-background-color: #111827;
+}
+.qty-spinner.spinner > .text-field,
+.qty-spinner.spinner .text-field {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 6 8;
+    -fx-alignment: CENTER;
+
+    -fx-control-inner-background: #111827;
+    -fx-background-color: #111827;
+    -fx-text-fill: #E5E7EB;
+    -fx-prompt-text-fill: rgba(229, 231, 235, 0.55);
+
+    -fx-highlight-fill: rgba(139, 92, 246, 0.35);
+    -fx-highlight-text-fill: #E5E7EB;
+}
+
