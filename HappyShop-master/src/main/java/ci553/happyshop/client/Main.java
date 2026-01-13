@@ -115,6 +115,10 @@ public class Main extends Application {
         Button backButton = new Button("Back to Login");
         backButton.setOnAction(e -> logout(primaryStage));
 
+        Button historyButton = new Button("Open Order History");
+        historyButton.getStyleClass().add("launcher-button");
+        historyButton.setOnAction(e -> startOrderHistory());
+
         Button btnExit = new Button("Exit");
         customerButton.getStyleClass().add("launcher-button");
         trackerButton.getStyleClass().add("launcher-button");
@@ -137,15 +141,15 @@ public class Main extends Application {
         root.getChildren().addAll(title, roleLabel, comboBox);
 
         if (user.getRole() == UserRole.CUSTOMER) {
-            root.getChildren().addAll(customerButton, trackerButton);
+            root.getChildren().addAll(customerButton, trackerButton, historyButton);
         }
 
         if (user.getRole() == UserRole.STAFF) {
-            root.getChildren().addAll(warehouseButton, pickerButton, trackerButton);
+            root.getChildren().addAll(warehouseButton, pickerButton, trackerButton, historyButton);
         }
 
         if (user.getRole() == UserRole.ADMIN) {
-            root.getChildren().addAll(customerButton, warehouseButton, pickerButton, trackerButton, emergencyExitButton);
+            root.getChildren().addAll(customerButton, warehouseButton, pickerButton, trackerButton, emergencyExitButton, historyButton);
         }
 
         root.getChildren().addAll(backButton, btnExit);
@@ -280,6 +284,12 @@ public class Main extends Application {
             }
         }
         showLogin(primaryStage);
+    }
+
+    private void startOrderHistory() {
+        ci553.happyshop.client.OrderHistory.OrderHistoryView view =
+                new ci553.happyshop.client.OrderHistory.OrderHistoryView();
+        view.start(new Stage());
     }
 
     //starts the EmergencyExit GUI, - used to close the entire application immediatelly

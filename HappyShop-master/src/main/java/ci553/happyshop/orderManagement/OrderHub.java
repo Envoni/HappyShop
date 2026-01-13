@@ -51,6 +51,7 @@ public class OrderHub  {
     private TreeMap<Integer,OrderState> OrderedOrderMap = new TreeMap<>();
     private TreeMap<Integer,OrderState> progressingOrderMap = new TreeMap<>();
     private final TreeMap<Integer, String> orderOwnerMap = new TreeMap<>();
+    //private final TreeMap<Integer, OrderState> orderHistoryMap = new TreeMap<>(); - not in use since order history persistence update
 
 
     /**
@@ -127,7 +128,8 @@ public class OrderHub  {
         String u = tracker.getFilterUsername();
         if (u == null || u.isEmpty()) {
             tracker.setOrderMap(snapshotOrderMap());
-        } else {
+        }
+        else {
             tracker.setOrderMap(getOrdersForCustomer(u));
         }
     }
@@ -150,7 +152,6 @@ public class OrderHub  {
                 orderTracker.setOrderMap(snap);
                 pushOrdersToTracker(orderTracker);
             } else {
-                orderTracker.setOrderMap(getOrdersForCustomer(u));
                 pushOrdersToTracker(orderTracker);
             }
         }
@@ -305,17 +306,29 @@ public class OrderHub  {
 
     public TreeMap<Integer, OrderState> getOrdersForCustomer(String username) {
         TreeMap<Integer, OrderState> out = new TreeMap<>();
-
-        if (username == null) return out;
-
-        for (Map.Entry<Integer, OrderState> e : orderMap.entrySet()) {
-            String owner = orderOwnerMap.get(e.getKey());
+        if (username == null || username.isBlank()) return out;
+        //ordered
+        for (Integer id : orderIdsLoader(orderedPath)) {
+            String owner = readOwner(orderedPath, id);
             if (username.equals(owner)) {
-                out.put(e.getKey(), e.getValue());
+                out.put(id, OrderState.Ordered);
+            }
+        }
+        //progressing
+        for (Integer id : orderIdsLoader(progressingPath)) {
+            String owner = readOwner(progressingPath, id);
+            if (username.equals(owner)) {
+                out.put(id, OrderState.Progressing);
+            }
+        }
+        //collected
+        for (Integer id : orderIdsLoader(collectedPath)) {
+            String owner = readOwner(collectedPath, id);
+            if (username.equals(owner)) {
+                out.put(id, OrderState.Collected);
             }
         }
         return out;
     }
-
 
 }

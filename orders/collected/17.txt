@@ -1,0 +1,11 @@
+Customer: billy2
+Order ID: 17 
+State: Collected
+OrderedDateTime: 2026-01-13 13:01:51 
+ProgressingDateTime: 2026-01-13 13:02:16
+CollectedDateTime: 2026-01-13 13:02:17
+Items:
+ 0006    MP3 player         ( 1) £   7.99
+--------------------------------------------
+ Total                               £   7.99
+
