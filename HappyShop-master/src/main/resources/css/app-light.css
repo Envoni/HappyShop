@@ -162,4 +162,17 @@
     -fx-highlight-fill: #C7D2FE;
     -fx-highlight-text-fill: #111827;
 }
+.product-viewer-root {
+    -fx-background-color: #F4F6FA;
+}
+.pv-top { -fx-padding: 0 0 10 0; }
+.pv-title { -fx-font-size: 18px; -fx-font-weight: 800; }
+.pv-search { -fx-background-radius: 10; -fx-border-radius: 10; }
+.pv-button { -fx-background-radius: 10; -fx-font-weight: 800; }
+.pv-left { -fx-padding: 6 10 0 0; }
+.pv-right { -fx-padding: 6 0 0 10; }
+.pv-desc { -fx-background-radius: 10; -fx-border-radius: 10; }
+.pv-detail-title { -fx-font-size: 15px; -fx-font-weight: 800; }
+.pv-detail-line { -fx-font-size: 13px; -fx-font-weight: 700; }
+
 

@@ -1,9 +1,9 @@
 Customer: billy2
 Order ID: 21 
-State: Ordered 
+State: Collected
 OrderedDateTime: 2026-01-13 22:20:49 
-ProgressingDateTime:  
-CollectedDateTime: 
+ProgressingDateTime: 2026-01-14 11:43:08
+CollectedDateTime: 2026-01-14 11:43:09
 Items:
  0001    40 inch TV         (93) £25017.00
 --------------------------------------------

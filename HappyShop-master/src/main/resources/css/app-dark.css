@@ -169,4 +169,20 @@ label.login-title{
     -fx-highlight-fill: rgba(139, 92, 246, 0.35);
     -fx-highlight-text-fill: #E5E7EB;
 }
+.product-viewer-root {
+     -fx-background-color: #0B1220;
+}
+.pv-title { -fx-text-fill: #E5E7EB; }
+.pv-detail-title { -fx-text-fill: #E5E7EB; }
+.pv-detail-line { -fx-text-fill: #CBD5E1; }
+.pv-desc, .pv-search {
+     -fx-control-inner-background: #111827;
+     -fx-background-color: #111827;
+     -fx-text-fill: #E5E7EB;
+     -fx-prompt-text-fill: rgba(229, 231, 235, 0.55);
+     -fx-border-color: rgba(229, 231, 235, 0.18);
+     -fx-border-radius: 10;
+     -fx-background-radius: 10;
+}
+
 

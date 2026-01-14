@@ -119,6 +119,10 @@ public class Main extends Application {
         historyButton.getStyleClass().add("launcher-button");
         historyButton.setOnAction(e -> startOrderHistory());
 
+        Button productViewerButton = new Button("Open Product Viewer");
+        productViewerButton.getStyleClass().add("launcher-button");
+        productViewerButton.setOnAction(e -> startProductViewer());
+
         Button btnExit = new Button("Exit");
         customerButton.getStyleClass().add("launcher-button");
         trackerButton.getStyleClass().add("launcher-button");
@@ -126,6 +130,7 @@ public class Main extends Application {
         warehouseButton.getStyleClass().add("launcher-button");
         emergencyExitButton.getStyleClass().add("launcher-button");
         backButton.getStyleClass().add("launcher-button");
+        productViewerButton.getStyleClass().add("launcher-button");
 
         btnExit.getStyleClass().addAll("launcher-button", "launcher-exit");
         btnExit.setOnAction(e -> {
@@ -141,15 +146,15 @@ public class Main extends Application {
         root.getChildren().addAll(title, roleLabel, comboBox);
 
         if (user.getRole() == UserRole.CUSTOMER) {
-            root.getChildren().addAll(customerButton, trackerButton, historyButton);
+            root.getChildren().addAll(customerButton, trackerButton, historyButton, productViewerButton);
         }
 
         if (user.getRole() == UserRole.STAFF) {
-            root.getChildren().addAll(warehouseButton, pickerButton, trackerButton, historyButton);
+            root.getChildren().addAll(warehouseButton, pickerButton, trackerButton, historyButton, productViewerButton);
         }
 
         if (user.getRole() == UserRole.ADMIN) {
-            root.getChildren().addAll(customerButton, warehouseButton, pickerButton, trackerButton, emergencyExitButton, historyButton);
+            root.getChildren().addAll(customerButton, warehouseButton, pickerButton, trackerButton, emergencyExitButton, historyButton, productViewerButton);
         }
 
         root.getChildren().addAll(backButton, btnExit);
@@ -289,6 +294,19 @@ public class Main extends Application {
     private void startOrderHistory() {
         ci553.happyshop.client.OrderHistory.OrderHistoryView view =
                 new ci553.happyshop.client.OrderHistory.OrderHistoryView();
+        view.start(new Stage());
+    }
+
+    private void startProductViewer() {
+        var db = new ci553.happyshop.storageAccess.DerbyRW(); // or your DatabaseRWFactory if you use it
+
+        var view = new ci553.happyshop.client.productViewer.ProductViewerView();
+        var model = new ci553.happyshop.client.productViewer.ProductViewerModel(db);
+        var controller = new ci553.happyshop.client.productViewer.ProductViewerController(model);
+
+        model.setView(view);
+        view.setController(controller);
+
         view.start(new Stage());
     }
 
