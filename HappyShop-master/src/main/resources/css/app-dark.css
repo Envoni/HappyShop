@@ -185,4 +185,99 @@ label.login-title{
      -fx-background-radius: 10;
 }
 
+.product-viewer-root {
+    -fx-background-color: #0f172a;
+    -fx-padding: 12;
+}
+.product-viewer-root .label {
+    -fx-text-fill: #e5e7eb;
+}
+.product-viewer-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #e5e7eb;
+}
+.product-viewer-status {
+    -fx-text-fill: #94a3b8;
+    -fx-font-weight: 600;
+}
+.product-viewer-root .text-field {
+    -fx-background-color: #111827;
+    -fx-text-fill: #e5e7eb;
+    -fx-prompt-text-fill: #64748b;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #243044;
+    -fx-border-width: 1;
+    -fx-padding: 10 12;
+}
+.product-viewer-root .button {
+    -fx-background-color: #6d28d9;
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-background-radius: 12;
+    -fx-padding: 10 16;
+}
+.product-viewer-root .button:hover {
+    -fx-background-color: #5b21b6;
+}
+.product-viewer-root .list-view {
+    -fx-background-color: #111827;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: #243044;
+    -fx-border-width: 1;
+}
+.product-viewer-root .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e5e7eb;
+    -fx-padding: 8 10;
+}
+.product-viewer-root .list-cell:filled:selected {
+    -fx-background-color: #2b1a55;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 10;
+}
+.product-grid-scroll {
+    -fx-background-color: transparent;
+}
+.product-grid-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+.product-grid {
+    -fx-padding: 6;
+    -fx-hgap: 12;
+    -fx-vgap: 12;
+}
+.product-card {
+    -fx-background-color: #111827;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #243044;
+    -fx-border-width: 1;
+    -fx-padding: 12;
+}
+.product-card:hover {
+    -fx-border-color: #4c1d95;
+}
+.product-card-title {
+    -fx-font-weight: 900;
+    -fx-text-fill: #e5e7eb;
+}
+.product-card-subtitle {
+    -fx-text-fill: #94a3b8;
+}
+.product-card-price {
+    -fx-font-weight: 900;
+    -fx-text-fill: #e5e7eb;
+}
+.product-card-stock {
+    -fx-font-weight: 800;
+    -fx-text-fill: #34d399;
+}
+.product-card-stock-out {
+    -fx-font-weight: 800;
+    -fx-text-fill: #f87171;
+}
+
 

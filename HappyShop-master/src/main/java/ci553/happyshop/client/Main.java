@@ -308,6 +308,7 @@ public class Main extends Application {
         view.setController(controller);
 
         view.start(new Stage());
+        model.loadAllProducts();
     }
 
     //starts the EmergencyExit GUI, - used to close the entire application immediatelly

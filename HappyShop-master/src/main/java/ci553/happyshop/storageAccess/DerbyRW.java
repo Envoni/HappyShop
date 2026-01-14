@@ -44,31 +44,6 @@ public class DerbyRW implements DatabaseRW {
         return productList;
     }
 
-    //search  by product Id, return a product or null
-    public Product searchByProductId(String proId) throws SQLException {
-        Product product = null;
-        String query = "SELECT * FROM ProductTable WHERE productID = ?";
-
-        try (Connection conn = DriverManager.getConnection(dbURL);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            // Set the productId parameter
-            pstmt.setString(1, proId);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()){
-                    product= makeProObjFromDbRecord(rs);
-                    System.out.println("Product " + proId + " found.");
-                }else{
-                    System.out.println("Product " + proId + " not found.");
-                }
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return product;
-    }
-
     public Product searchByProductName(String name) throws SQLException {
         if (name == null || name.isBlank()) return null;
 
@@ -365,5 +340,46 @@ public class DerbyRW implements DatabaseRW {
             lock.unlock(); // Always release the lock after the operation
         }
     }
+
+    @Override
+    public java.util.List<Product> getAllProducts() throws SQLException {
+        java.util.List<Product> out = new java.util.ArrayList<>();
+
+        String sql = "SELECT * FROM ProductTable ORDER BY productID";
+
+        try (Connection conn = DriverManager.getConnection(dbURL);
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                out.add(makeProObjFromDbRecord(rs));
+            }
+        }
+        return out;
+    }
+
+    public Product searchByProductId(String proId) throws SQLException {
+        if (proId == null || proId.isBlank()) return null;
+
+        String query = "SELECT * FROM ProductTable WHERE productID = ?";
+
+        try (Connection conn = DriverManager.getConnection(dbURL);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, proId.trim());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Product product = makeProObjFromDbRecord(rs);
+                    System.out.println("Product " + proId + " found.");
+                    return product;
+                } else {
+                    System.out.println("Product " + proId + " not found.");
+                    return null;
+                }
+            }
+        }
+    }
+
 
 }

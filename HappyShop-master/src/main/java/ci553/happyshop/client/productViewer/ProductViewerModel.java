@@ -21,40 +21,87 @@ public class ProductViewerModel {
         this.view = view;
     }
 
+    public void loadAllProducts() {
+        if (view == null) return;
+
+        try {
+            List<Product> products = db.getAllProducts();
+
+            lastResults.clear();
+            lastResults.addAll(products);
+
+            // convert to ProductRow list
+            List<ProductViewerView.ProductRow> rows = new ArrayList<>();
+            for (Product p : products) {
+                rows.add(toRow(p));
+            }
+
+            // ID sort (DB already orders, but keep this for safety)
+            rows.sort((a, b) -> a.id.compareToIgnoreCase(b.id));
+
+            view.setResults(rows);          // left list
+            view.showGrid(rows);            // MAIN GRID (Option 2)
+            view.showStatus("Showing all products (" + rows.size() + ")");
+
+            if (!rows.isEmpty()) {
+                view.showSelected(rows.get(0));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            view.showStatus("Failed to load products: " + e.getMessage());
+            view.setResults(List.of());
+            view.showGrid(List.of());
+        }
+    }
+
     public void search(String text) {
         if (view == null) return;
-        if (text == null || text.isEmpty()) {
-            view.showMessage("Please enter a product name or ID");
-            view.setResults(List.of());
+
+        if (text == null || text.isBlank()) {
+            loadAllProducts();
             return;
         }
-        try {
-            Product p;
-            if (looksLikeId(text)) {
-                p = db.searchByProductId(text.trim());
-            }
-            else {
-                p = db.searchByProductName(text.trim());
-            }
-            lastResults.clear();
 
-            if (p == null) {
-                view.showMessage("Product not found");
+        try {
+            //returns list
+            ArrayList<Product> products = db.searchProduct(text.trim());
+
+            lastResults.clear();
+            lastResults.addAll(products);
+
+            // convert to ProductRow list
+            List<ProductViewerView.ProductRow> rows = new ArrayList<>();
+            for (Product p : products) {
+                rows.add(toRow(p));
+            }
+
+            rows.sort((a, b) -> a.id.compareToIgnoreCase(b.id));
+
+            if (rows.isEmpty()) {
+                view.showMessage("No products found for: " + text.trim());
                 view.setResults(List.of());
+                view.showGrid(List.of());
+                view.showStatus("0 results");
                 return;
             }
-            lastResults.add(p);
-            view.setResults(List.of(toRow(p)));
 
-        }
-        catch (SQLException e) {
+            view.setResults(rows);          // left list shows matches
+            view.showGrid(rows);            // grid shows matches
+            view.showStatus("Results: " + rows.size());
+
+            view.showSelected(rows.get(0));
+
+        } catch (SQLException e) {
             view.showMessage("Search failed: " + e.getMessage());
             view.setResults(List.of());
+            view.showGrid(List.of());
         }
     }
 
     public void select(String productId) {
         if (view == null || productId == null) return;
+
         for (Product p : lastResults) {
             if (productId.equals(p.getProductId())) {
                 view.showSelected(toRow(p));
@@ -62,6 +109,7 @@ public class ProductViewerModel {
             }
         }
     }
+
 
     private boolean looksLikeId(String text) {
         String t = text.trim();

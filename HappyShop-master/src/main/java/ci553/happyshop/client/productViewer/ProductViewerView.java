@@ -1,6 +1,5 @@
 package ci553.happyshop.client.productViewer;
 import ci553.happyshop.ui.AppTheme;
-import ci553.happyshop.utility.StorageLocation;
 import ci553.happyshop.utility.WinPosManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,6 +12,10 @@ import javafx.stage.Stage;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+
+
+
 
 public class ProductViewerView {
     private final int WIDTH = 800;
@@ -30,9 +33,21 @@ public class ProductViewerView {
 
     private ProductViewerController controller;
 
+    private ProductViewerModel model;
+
+    private final javafx.scene.layout.TilePane grid = new javafx.scene.layout.TilePane();
+    private final javafx.scene.control.ScrollPane gridScroll = new javafx.scene.control.ScrollPane(grid);
+
+    private final Label status = new Label();
+
     public void setController(ProductViewerController controller) {
         this.controller = controller;
     }
+
+    public void setModel(ProductViewerModel model) {
+        this.model = model;
+    }
+
 
     public void start(Stage window) {
         Label heading = new Label("Product Viewer");
@@ -63,6 +78,12 @@ public class ProductViewerView {
             }
         });
 
+        lvResults.getSelectionModel().selectedItemProperty().addListener((obs, oldV, row) -> {
+            if (row == null) return;
+            if (controller != null) controller.select(row.id);
+        });
+
+
         VBox left = new VBox(10, new Label("Results"), lvResults);
         left.getStyleClass().add("pv-left");
         VBox.setVgrow(lvResults, Priority.ALWAYS);
@@ -80,28 +101,45 @@ public class ProductViewerView {
         taDesc.setWrapText(true);
         taDesc.getStyleClass().add("pv-desc");
         taDesc.setPrefRowCount(6);
-        VBox right = new VBox(10, ivProduct, lbTitle, lbPrice, lbStock, taDesc);
-        right.getStyleClass().add("pv-right");
-        VBox.setVgrow(taDesc, Priority.ALWAYS);
+
+        taDesc.setPrefRowCount(6);
+        taDesc.setPrefHeight(150);
+
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPrefColumns(4);                // grid columns (adjust)
+        grid.getStyleClass().add("pv-grid");
+
+        gridScroll.setFitToWidth(true);
+        gridScroll.setFitToHeight(true);
+        gridScroll.getStyleClass().add("pv-grid-scroll");
 
         BorderPane root = new BorderPane();
         root.setTop(top);
         root.setLeft(left);
-        root.setCenter(right);
         root.setPadding(new Insets(12));
         root.getStyleClass().add("product-viewer-root");
+        status.getStyleClass().add("pv-status");
+        root.setBottom(status);
+        BorderPane.setMargin(status, new Insets(8, 0, 0, 0));
+
+        root.setCenter(gridScroll);
+
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         AppTheme.register(scene);
         window.setTitle("HappyShop - Product Viewer");
         window.setScene(scene);
         WinPosManager.registerWindow(window, WIDTH, HEIGHT);
+        if (model != null) model.loadAllProducts();
         window.show();
     }
 
     public void setResults(java.util.List<ProductRow> rows) {
         lvResults.getItems().setAll(rows);
+        showGrid(rows); // IMPORTANT: populate the grid from the same data
         if (!rows.isEmpty()) lvResults.getSelectionModel().selectFirst();
     }
+
 
     public void showSelected(ProductRow row) {
         if (row == null) {
@@ -116,24 +154,63 @@ public class ProductViewerView {
         lbTitle.setText(row.id + " - " + row.name);
         lbPrice.setText("Price: £" + row.priceText);
         lbStock.setText(row.stock <= 0 ? "Stock: 0 " : "Stock: " + row.stock);
+        taDesc.setText(row.fullDescription == null ? "" : row.fullDescription);
 
-        //load image
-        try {
-            String img = row.imageName;
-            if (img == null || img.isBlank()) {
-                ivProduct.setImage(null);
-                return;
-            }
-            String relative = StorageLocation.imageFolder + img;
-            Path full = Paths.get(relative).toAbsolutePath();
-            ivProduct.setImage(new Image(full.toUri().toString(), true));
-        } catch (Exception ex) {
-            ivProduct.setImage(null);
-        }
+        String uri = toImageUri(row.imageName, row.id);
+        ivProduct.setImage(uri == null? null : new Image(uri, true));
+
     }
 
     public void showMessage(String msg) {
         lbTitle.setText(msg);
+    }
+
+    private String toImageUri(String imageName, String productId) {
+
+        //DB image name
+        String[] candidates = new String[] {
+                clean(imageName),
+                clean(productId) + ".jpg",
+                clean(productId) + ".png"
+        };
+
+        for (String file : candidates) {
+            if (file == null || file.isBlank()) continue;
+
+            //classpath: src/main/resources/<file>
+            var r0 = getClass().getResource("/" + file);
+            if (r0 != null) return r0.toExternalForm();
+
+            //classpath: src/main/resources/images/<file>
+            var r1 = getClass().getResource("/images/" + file);
+            if (r1 != null) return r1.toExternalForm();
+
+            //disk: <project>/images/<file>
+            try {
+                Path wd = Paths.get(System.getProperty("user.dir"));
+
+                Path p1 = wd.resolve("images").resolve(file).toAbsolutePath();
+                if (java.nio.file.Files.exists(p1)) return p1.toUri().toString();
+
+                //disk: <project>/src/main/resources/<file>
+                Path p2 = wd.resolve("src/main/resources").resolve(file).toAbsolutePath();
+                if (java.nio.file.Files.exists(p2)) return p2.toUri().toString();
+
+                //disk: <project>/src/main/resources/images/<file>
+                Path p3 = wd.resolve("src/main/resources/images").resolve(file).toAbsolutePath();
+                if (java.nio.file.Files.exists(p3)) return p3.toUri().toString();
+
+            } catch (Exception ignored) { }
+        }
+
+        return null;
+    }
+
+    private String clean(String s) {
+        if (s == null) return null;
+        String t = s.trim().replace("\\", "/");
+        while (t.startsWith("/")) t = t.substring(1);
+        return t;
     }
 
     public static final class ProductRow {
@@ -152,5 +229,47 @@ public class ProductViewerView {
             this.stock = stock;
             this.priceText = priceText;
         }
+    }
+
+    public void showGrid(java.util.List<ProductRow> rows) {
+        grid.getChildren().clear();
+        if (rows == null || rows.isEmpty()) return;
+
+        for (ProductRow r : rows) {
+            VBox card = new VBox(6);
+            card.getStyleClass().add("pv-card");
+            ImageView cardImg = new ImageView();
+            cardImg.setFitWidth(110);
+            cardImg.setFitHeight(110);
+            cardImg.setPreserveRatio(true);
+            cardImg.setSmooth(true);
+            cardImg.getStyleClass().add("pv-card-image");
+
+            try {
+                String uri = toImageUri(r.imageName, r.id);
+                ivProduct.setImage(uri == null? null : new Image(uri, true));
+            } catch (Exception ignored) {}
+
+            Label id = new Label(r.id);
+            id.getStyleClass().add("pv-card-id");
+            Label name = new Label(r.name);
+            name.setWrapText(true);
+            name.getStyleClass().add("pv-card-name");
+            Label price = new Label("£" + r.priceText);
+            price.getStyleClass().add("pv-card-meta");
+            Label stock = new Label("Stock: " + r.stock);
+            stock.getStyleClass().add("pv-card-meta");
+            card.getChildren().addAll(cardImg, id, name, price, stock);
+
+            card.setOnMouseClicked(e -> {
+                if (controller != null) controller.select(r.id);
+            });
+
+        grid.getChildren().add(card);
+        }
+    }
+
+    public void showStatus(String msg) {
+        status.setText(msg == null ? "" : msg);
     }
 }
