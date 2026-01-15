@@ -2,7 +2,6 @@ package ci553.happyshop.client.warehouse;
 
 import ci553.happyshop.catalogue.Product;
 import ci553.happyshop.storageAccess.DatabaseRW;
-import ci553.happyshop.storageAccess.DerbyRW;
 import ci553.happyshop.storageAccess.ImageFileManager;
 import ci553.happyshop.utility.StorageLocation;
 
@@ -220,24 +219,37 @@ public class WarehouseModel {
         String textPrice = view.tfPriceNewPro.getText().trim();
         String textStock = view.tfStockNewPro.getText().trim();
         String description = view.taDescriptionNewPro.getText().trim();
-        String iPath = view.imageUriNewPro; //image Path from the imageChooser in View class
 
         //validate input
-        if (validateInputNewProChild(theNewProId, textPrice, textStock, description, iPath) ==false) {
+        if (validateInputNewProChild(theNewProId, textPrice, textStock, description, "") ==false) {
             updateView(UpdateForAction.ShowInputErrorMsg);
-        } else {
+            return;
+        }
+
+        double price = Double.parseDouble(textPrice);
+        int stock = Integer.parseInt(textStock);
+
+        String imageNameWithExtension = "";
             //copy the user selected image to project image folder and using productId as image name
             //and get the image extension from the source image, we write this name to database
-            String imageNameWithExtension = ImageFileManager.copyFileToDestination(view.imageUriNewPro, StorageLocation.imageFolder,theNewProId);
-            double price = Double.parseDouble(textPrice);
-            int stock = Integer.parseInt(textStock);
+            //only if user selects an image
 
-            //insertNewProduct to databse (String id, String des,double price,String image,int stock)
-            //a record in databse looks like ('0001', '40 inch TV', 269.00,'0001TV.jpg',100)"
-            databaseRW.insertNewProduct(theNewProId,description,price,imageNameWithExtension,stock);
-            updateView(UpdateForAction.BtnSummitNew);
-            theNewProId = null;
+        if (view.imageUriNewPro != null && !view.imageUriNewPro.isBlank()) {
+            try {
+                imageNameWithExtension = ImageFileManager.copyFileToDestination(
+                        view.imageUriNewPro,
+                        StorageLocation.imageFolder,
+                        theNewProId
+                );
+            } catch (Exception ex) {
+                System.out.println("Image copy failed, continuing without image: " + ex.getMessage());
+                imageNameWithExtension = "";
+            }
         }
+        databaseRW.insertNewProduct(theNewProId, description, price, imageNameWithExtension, stock);
+
+        updateView(UpdateForAction.BtnSummitNew);
+        theNewProId = null;
     }
 
     private  boolean validateInputEditChild(String txPrice, String txStock,

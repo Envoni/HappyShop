@@ -60,6 +60,9 @@ public class ImageFileManager {
         String fileNameWithExtension = fileNameWithoutExtension + fileExtension;
         Path destinationPath = destinationFolderPath.resolve(fileNameWithExtension);  // Combine the product ID (fileNameWithoutExtension) with the extension
 
+        System.out.println("user.dir = " + System.getProperty("user.dir"));
+        System.out.println("dest (relative) = " + Paths.get("images", "0013.png").toAbsolutePath());
+
         // Copy the file to the destination folder with the specified name
         Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
         System.out.println("File copied successfully to: " + destinationPath);

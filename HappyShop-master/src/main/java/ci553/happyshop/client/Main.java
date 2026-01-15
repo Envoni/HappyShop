@@ -159,7 +159,7 @@ public class Main extends Application {
 
         root.getChildren().addAll(backButton, btnExit);
 
-        Scene scene = new Scene(root, 350, 500);
+        Scene scene = new Scene(root, 350, 600);
         AppTheme.register(scene);
         primaryStage.setTitle("HappyShop Launcher");
         primaryStage.setScene(scene);
